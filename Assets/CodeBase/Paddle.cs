@@ -51,6 +51,7 @@ namespace CodeBase
                 float bounceAngle = (offset / width) * _maxBounceAngele;
                 float newAngle = Mathf.Clamp( currentAngle + bounceAngle, - _maxBounceAngele, _maxBounceAngele);
                 Quaternion rotation = Quaternion.AngleAxis(newAngle, Vector3.forward);
+                ball.Rb.velocity = rotation * Vector3.up * ball.Rb.velocity.magnitude;
             }
         }
     }
