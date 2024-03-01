@@ -5,9 +5,9 @@ namespace CodeBase
 {
     public class Paddle : MonoBehaviour
     {
-        public Rigidbody2D Rb { get; private set; }
+        private Rigidbody2D Rb { get; set; }
         public Vector2 direction;
-
+        public float Speed;
         private void Awake()
         {
             Rb = GetComponent<Rigidbody2D>();
@@ -22,9 +22,18 @@ namespace CodeBase
             else if(Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow))
             {
                 direction = Vector2.right;
-            }else 
+            }
+            else 
                 direction = Vector2.zero;
             
+        }
+
+        private void FixedUpdate() {
+            if (direction != Vector2.zero)
+            {
+                Rb.AddForce(direction * Speed);
+
+            }
         }
     }
 }
