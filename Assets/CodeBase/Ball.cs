@@ -5,7 +5,7 @@ using Random = UnityEngine.Random;
 namespace CodeBase {
     public class Ball : MonoBehaviour
     {
-        private Rigidbody2D Rb { get; set; }
+        public Rigidbody2D Rb { get; set; }
         public float Speed = 500; 
         private void Awake()
         {
