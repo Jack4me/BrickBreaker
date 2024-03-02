@@ -68,12 +68,15 @@ namespace CodeBase {
 
         private bool Cleared() {
             for (int i = 0; i < _bricks.Length; i++) {
-                if (_bricks[i].gameObject.activeInHierarchy && !_bricks[i].unbreakeble) {
+                if (BlockEnded(i)) {
                     return false;
                 }
             }
+            return true;
+        }
 
-            return true; 
+        private bool BlockEnded(int i) {
+            return _bricks[i].gameObject.activeInHierarchy && !_bricks[i].Unbreakeble;
         }
     }
 }

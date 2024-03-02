@@ -3,14 +3,25 @@ using UnityEngine;
 
 namespace CodeBase {
     public class Brick : MonoBehaviour {
-        public int Health;
-        private SpriteRenderer Sprite;
-        public Sprite[] States;
-        public bool unbreakeble;
-        public int Points = 100;
+        [field: SerializeField] public int Health { get; private set; }
+        [field: SerializeField] public Sprite[] States { get; private set; }
+        [field: SerializeField] public bool Unbreakeble { get; private set; }
+
+        [field: SerializeField] public int Points { get; private set; } = 100;
+
+        // [SerializeField] private int _pointTest;
+        //
+        // public int PointTest
+        // {
+        //     get { return _pointTest; }
+        //     
+        // }
+        private GameManager _gameManager;
+        private SpriteRenderer _sprite;
 
         private void Awake() {
-            Sprite = GetComponent<SpriteRenderer>();
+            _sprite = GetComponent<SpriteRenderer>();
+            _gameManager = FindObjectOfType<GameManager>();
         }
 
         private void Start() {
@@ -18,14 +29,14 @@ namespace CodeBase {
         }
 
         public void ResetBricks() {
-            if (!unbreakeble) {
+            if (!Unbreakeble) {
                 Health = States.Length;
-                Sprite.sprite = States[Health - 1];
+                _sprite.sprite = States[Health - 1];
             }
         }
 
         private void Hit() {
-            if (unbreakeble) {
+            if (Unbreakeble) {
                 return;
             }
 
@@ -34,14 +45,19 @@ namespace CodeBase {
                 gameObject.SetActive(false);
             }
             else {
-                Sprite.sprite = States[Health - 1];
+                _sprite.sprite = States[Health - 1];
             }
 
-            FindObjectOfType<GameManager>().Hit(this);
+            _gameManager ??= FindObjectOfType<GameManager>();
+            // if (_gameManager == null) {
+            //     _gameManager=   FindObjectOfType<GameManager>();
+            // }
+
+            _gameManager.Hit(this);
         }
 
         private void OnCollisionEnter2D(Collision2D col) {
-            if (col.gameObject.name == "Ball") {
+            if (col.gameObject.GetComponent<Ball>()) {
                 Hit();
             }
         }
