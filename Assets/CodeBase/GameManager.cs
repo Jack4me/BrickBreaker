@@ -3,47 +3,43 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
-namespace CodeBase
-{
-    public class GameManager : MonoBehaviour
-    {
+namespace CodeBase {
+    public class GameManager : MonoBehaviour {
         [SerializeField] private int score;
         [SerializeField] private int lives;
+        public int Level = 1;
         private Ball _ball;
         private Paddle _paddle;
         private Brick[] _bricks;
 
-        private void Awake()
-        {
+        private void Awake() {
             DontDestroyOnLoad(gameObject);
             SceneManager.sceneLoaded += OnLevelLoaded;
         }
 
-        private void Start()
-        {
-            
+        private void Start() {
             NewGame();
         }
 
-        private void NewGame()
-        {
+        public void OnLevelLoaded(Scene scene, LoadSceneMode loadSceneMode) {
+            _ball = FindObjectOfType<Ball>();
+            _paddle = FindObjectOfType<Paddle>();
+            _bricks = FindObjectsOfType<Brick>();
+        }
+
+        private void NewGame() {
             score = 0;
             lives = 3;
             LoadLevel(1);
         }
 
-        public void LoadLevel(int level)
-        {
+        public void LoadLevel(int level) {
             SceneManager.LoadScene("Level" + level);
-        }
-
-        public void Hit(Brick brick) {
-            score += brick.Points;
         }
 
         public void Miss() {
             lives--;
-            if (lives>0) {
+            if (lives > 0) {
                 ResetLevel();
             }
             else {
@@ -63,10 +59,21 @@ namespace CodeBase
             }
         }
 
-        public void OnLevelLoaded(Scene scene, LoadSceneMode loadSceneMode) {
-            _ball = FindObjectOfType<Ball>();
-            _paddle = FindObjectOfType<Paddle>();
-            _bricks = FindObjectsOfType<Brick>();
+        public void Hit(Brick brick) {
+            score += brick.Points;
+            if (Cleared()) {
+                LoadLevel(Level + 1);
+            }
+        }
+
+        private bool Cleared() {
+            for (int i = 0; i < _bricks.Length; i++) {
+                if (_bricks[i].gameObject.activeInHierarchy && !_bricks[i].unbreakeble) {
+                    return false;
+                }
+            }
+
+            return true; 
         }
     }
 }
