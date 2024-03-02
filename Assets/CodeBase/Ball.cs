@@ -13,7 +13,14 @@ namespace CodeBase {
         }
 
         private void Start() {
-        Invoke(nameof(SetRandomTrajectory),1);
+            ResetBall();
+        }
+
+        public void ResetBall() {
+            transform.position = Vector2.zero;
+            Rb.velocity = Vector2.zero;
+            Invoke(nameof(SetRandomTrajectory),1);
+
         }
 
         public void SetRandomTrajectory() {
